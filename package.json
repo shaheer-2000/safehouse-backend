@@ -1,0 +1,26 @@
+{
+  "name": "safehouse-backend",
+  "version": "1.0.0",
+  "description": "SafeHouse - A victim resolution solution for NGOs.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "fastify start -l info app.js",
+    "dev": "fastify start -w -l info -P app.js"
+  },
+  "keywords": [],
+  "author": "shaheer-2000",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.0.0",
+    "fastify-plugin": "^3.0.0",
+    "fastify-autoload": "^3.10.0",
+    "fastify-sensible": "^3.1.2",
+    "fastify-cli": "^2.15.0"
+  },
+  "devDependencies": {
+    "tap": "^15.1.6"
+  }
+}
