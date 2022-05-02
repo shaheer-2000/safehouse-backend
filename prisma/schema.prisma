@@ -9,3 +9,171 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Login {
+  username String @id
+  password String
+
+  userLogin        User?              @relation("UserLogin")
+  orgLogin         User?              @relation("OrgLogin")
+  org              Organization?
+  role             UserRole?
+  courseLister     Course[]
+  jobLister        Job[]
+  jobAppliedFor    JobAppliedFor[]
+  courseEnrolledIn CourseEnrolledIn[]
+
+  @@map("login")
+}
+
+model Organization {
+  name     String
+  desc     String @map("description")
+  website  String
+  email    String
+  address  String
+  phoneNum String @map("phone_num")
+  logo     String
+
+  UserLogin Login  @relation(fields: [username], references: [username])
+  username  String @id
+
+  @@map("organizations")
+}
+
+model User {
+  firstname    String   @map("first_name")
+  lastname     String   @map("last_name")
+  email        String
+  gender       Gender
+  profileImage String   @map("profile_image")
+  dateOfBirth  DateTime @map("date_of_birth")
+  phoneNum     String   @map("phone_num")
+  address      String
+
+  UserLogin Login  @relation("UserLogin", fields: [username], references: [username])
+  username  String @id
+
+  OrgLogin    Login  @relation("OrgLogin", fields: [orgUsername], references: [username])
+  orgUsername String @map("affiliated_org") @unique
+
+  @@map("users")
+}
+
+model Role {
+  id        Int    @id @default(autoincrement())
+  name      String
+  desc      String @map("description")
+  authLevel Int    @map("authority_level")
+
+  userRole UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  User     Login  @relation(fields: [username], references: [username])
+  username String @id
+
+  Role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  @@map("user_roles")
+}
+
+model Course {
+  id         Int    @id @default(autoincrement())
+  name       String
+  desc       String @map("description")
+  instructor String
+  url        String
+
+  Lister Login  @relation(fields: [lister], references: [username])
+  lister String
+
+  courseEnrolledIn CourseEnrolledIn[]
+
+  @@map("courses")
+}
+
+model Job {
+  id       Int    @id @default(autoincrement())
+  name     String
+  desc     String @map("description")
+  employer String
+  url      String
+
+  Lister Login  @relation(fields: [lister], references: [username])
+  lister String
+
+  jobAppliedFor JobAppliedFor[]
+
+  @@map("jobs")
+}
+
+model JobAppliedFor {
+  status JobStatus
+
+  UserLogin Login  @relation(fields: [username], references: [username])
+  username  String
+  Job       Job    @relation(fields: [jobId], references: [id])
+  jobId     Int    @map("job_id")
+
+  @@id([username, jobId])
+  @@map("jobs_applied_for")
+}
+
+model CourseEnrolledIn {
+  status CourseStatus
+
+  UserLogin Login  @relation(fields: [username], references: [username])
+  username  String
+  Course    Course @relation(fields: [courseId], references: [id])
+  courseId  Int    @map("course_id")
+
+  @@id([username, courseId])
+  @@map("courses_enrolled_in")
+}
+
+model OrgRequest {
+  id       Int              @id @default(autoincrement())
+  name     String
+  desc     String           @map("description")
+  website  String
+  email    String
+  address  String
+  phoneNum String           @map("phone_num")
+  logo     String
+  username String
+  status   OrgRequestStatus
+
+  @@map("organization_requests")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum JobStatus {
+  PENDING
+  CURRENTLY_WORKING
+  FIRED
+  QUITTED
+  REJECTED
+}
+
+enum CourseStatus {
+  PENDING
+  ENROLLED
+  FINISHED
+  DROPPED_OUT
+  CERTIFIED
+}
+
+enum OrgRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
