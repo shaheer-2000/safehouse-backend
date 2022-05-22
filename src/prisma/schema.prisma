@@ -15,7 +15,7 @@ model Login {
   password String
 
   userLogin        User?              @relation("UserLogin")
-  orgLogin         User[]              @relation("OrgLogin")
+  orgLogin         User[]             @relation("OrgLogin")
   org              Organization?
   role             UserRole?
   courseLister     Course[]
@@ -112,7 +112,7 @@ model Job {
 }
 
 model JobAppliedFor {
-  status JobStatus
+  status JobStatus @default(PENDING)
 
   UserLogin Login  @relation(fields: [username], references: [username])
   username  String
@@ -124,7 +124,7 @@ model JobAppliedFor {
 }
 
 model CourseEnrolledIn {
-  status CourseStatus
+  status CourseStatus @default(PENDING)
 
   UserLogin Login  @relation(fields: [username], references: [username])
   username  String
@@ -144,8 +144,8 @@ model OrgRequest {
   address  String
   phoneNum String           @map("phone_num")
   logo     String
-  username String
-  status   OrgRequestStatus
+  username String           @unique
+  status   OrgRequestStatus @default(PENDING)
 
   @@map("organization_requests")
 }

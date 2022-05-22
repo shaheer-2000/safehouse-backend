@@ -126,6 +126,9 @@ const authPlugin = fp(async (fastify, opts, next) => {
 			}
 
 			return orgUsername === user.orgUsername;
+		},
+		genTempPassword: function () {
+			return auth.genTempPass();
 		}
 	}, ['to', 'prisma']);
 

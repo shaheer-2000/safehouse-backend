@@ -66,3 +66,9 @@ prisma/migrations
 # temp
 src/test
 src/temp
+
+# mock data
+mock_data
+
+# artillery
+artillery_reports

@@ -9,7 +9,9 @@ const config = {
 		LISTER: 'LISTER',
 		NGO: 'NGO',
 		ADMIN: 'ADMIN'
-	}
+	},
+	SMTP_USERNAME: process.env.SMTP_USERNAME,
+	SMTP_PASS: process.env.SMTP_PASS
 };
 
 module.exports = config;

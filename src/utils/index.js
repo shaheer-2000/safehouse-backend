@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { nanoid } = require('nanoid');
 const saltRounds = 10;
 
 const hasRole = (userRole, allowedRoles) => {
@@ -13,11 +14,13 @@ const hasRole = (userRole, allowedRoles) => {
 
 const hashPass = (password) => bcrypt.hashSync(password, saltRounds);
 const compPass = (password, hashedPass) =>  bcrypt.compareSync(password, hashedPass);
+const genTempPass = () => nanoid(16);
 
 module.exports = {
 	auth: {
 		hasRole,
 		hashPass,
-		compPass
+		compPass,
+		genTempPass
 	},
 };
