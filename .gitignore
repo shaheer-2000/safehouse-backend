@@ -62,3 +62,7 @@ profile*
 
 # prisma migrations
 prisma/migrations
+
+# temp
+src/test
+src/temp

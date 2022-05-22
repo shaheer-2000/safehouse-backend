@@ -1,15 +1,15 @@
 const fp = require('fastify-plugin');
 const { PrismaClient } = require('@prisma/client');
 
-const prismaPlugin = fp(async (server, options) => {
+const prismaPlugin = fp(async (fastify, options) => {
 	const prisma = new PrismaClient();
 
 	await prisma.$connect();
 
-	server.decorate('prisma', prisma);
+	fastify.decorate('prisma', prisma);
 
-	server.addHook('onClose', async (server) => {
-		await server.prisma.$disconnect();
+	fastify.addHook('onClose', async (fastify) => {
+		await fastify.prisma.$disconnect();
 	})
 });
 
