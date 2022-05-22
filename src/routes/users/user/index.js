@@ -7,7 +7,7 @@ module.exports = async function (fastify, opts) {
 
 		// user has higher authority than target
 		// hasHigherAuthority for admin trying to update another admin check
-		if (!isSelfUpdate && (!req.user.role !== fastify.roles.ADMIN || !fastify.auth.hasHigherAuthority(req.user.role, username))) {
+		if (!isSelfUpdate && (req.user.role !== fastify.roles.ADMIN || !fastify.auth.hasHigherAuthority(req.user.role, username))) {
 			return res.forbidden();
 		}
 
