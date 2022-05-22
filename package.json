@@ -13,7 +13,8 @@
     "dev": "nodemon --verbose --watch src --watch .env --watch server.js -e .js --ignore src/tests --ignore src/prisma ./server.js"
   },
   "prisma": {
-    "schema": "./src/prisma/schema.prisma"
+    "schema": "./src/prisma/schema.prisma",
+    "seed": "node ./src/prisma/seed.js"
   },
   "keywords": [],
   "author": "shaheer-2000",

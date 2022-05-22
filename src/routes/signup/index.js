@@ -1,7 +1,8 @@
 module.exports = async (fastify, opts) => {
 	if (process.env.NODE_ENV === "development") {
 		fastify.post('/', async (req, res) => {
-			const { username, password } = req.body;
+			const { username: _username, password } = req.body;
+			const username = _username.toLowerCase().trim();
 
 			const [err, user] = await fastify.to(fastify.prisma.login.create({
 				data: {
@@ -16,6 +17,7 @@ module.exports = async (fastify, opts) => {
 			}));
 
 			if (err) {
+				console.log(err);
 				res.internalServerError();
 			} else {
 				return user;
@@ -28,7 +30,8 @@ module.exports = async (fastify, opts) => {
 		preValidation: [fastify.auth.hasRole([fastify.roles.ADMIN])]
 	}, async (req, res) => {
 		// signup NGOs here
-		const { username, password, ...orgData } = req.body;
+		const { username: _username, password, ...orgData } = req.body;
+		const username = _username.toLowerCase().trim();
 
 		const [userErr, user] = await fastify.to(fastify.prisma.login.create({
 			data: {
@@ -60,7 +63,8 @@ module.exports = async (fastify, opts) => {
 		preValidation: [fastify.auth.hasRole([fastify.roles.NGO])]
 	}, async (req, res) => {
 		// signup listers and users here
-		const { username, password, dateOfBirth, role, ...userData } = req.body;
+		const { username: _username, password, dateOfBirth, role, ...userData } = req.body;
+		const username = _username.toLowerCase().trim();
 
 		const orgUsername = req.user.username;
 		const assignableRoles = [fastify.roles.LISTER, fastify.roles.USER];

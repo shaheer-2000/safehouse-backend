@@ -1,6 +1,8 @@
 const signinRoutes = async (fastify, opts) => {
 	fastify.post('/', async (req, res) => {
-		const { username, password } = req.body;
+		const { username: _username, password } = req.body;
+		const username = _username.toLowerCase().trim();
+
 		const validCredentials = fastify.auth.hasValidCredentials(username, password);
 		
 		if (!validCredentials) {

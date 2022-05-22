@@ -1,12 +1,14 @@
 module.exports = async function (fastify, opts) {
 	fastify.put('/:username', {
-		onRequest: [fastify.verifyJWT],
-		preValidation: [fastify.auth.hasRole([fastify.roles.ADMIN])]
+		onRequest: [fastify.verifyJWT]
 	}, async function (req, res) {
 		const { username } = req.params;
+		const isSelfUpdate = req.user.username === username;
 
-		if (!fastify.auth.hasHigherAuthority(req.user.role, username)) {
-			res.forbidden();
+		// user has higher authority than target
+		// hasHigherAuthority for admin trying to update another admin check
+		if (!isSelfUpdate && (!req.user.role !== fastify.roles.ADMIN || !fastify.auth.hasHigherAuthority(req.user.role, username))) {
+			return res.forbidden();
 		}
 
 		const { email, profileImage, phoneNum, address } = req.body;
@@ -34,7 +36,8 @@ module.exports = async function (fastify, opts) {
 		}));
 
 		if (updateErr) {
-			res.badRequest();
+			console.log(updateErr);
+			return res.badRequest();
 		}
 
 		return updatedUser;
@@ -43,12 +46,17 @@ module.exports = async function (fastify, opts) {
 
 	fastify.delete('/:username', {
 		onRequest: [fastify.verifyJWT],
-		preValidation: [fastify.auth.hasRole([fastify.roles.ADMIN])]
+		preValidation: [fastify.auth.hasRole([fastify.roles.ADMIN, fastify.roles.NGO])]
 	}, async function (req, res) {
 		const { username } = req.params;
 
 		if (!fastify.auth.hasHigherAuthority(req.user.role, username)) {
-			res.forbidden();
+			return res.forbidden();
+		}
+
+		// ngo, but user/lister belongs to another ngo
+		if (req.user.role === fastify.roles.NGO && !fastify.auth.isMemberOf(req.user.username, username)) {
+			return res.forbidden();
 		}
 
 		const [err, result] = await fastify.to(fastify.prisma.user.delete({
@@ -59,7 +67,7 @@ module.exports = async function (fastify, opts) {
 
 		if (err) {
 			console.log(err);
-			res.internalServerError();
+			return res.internalServerError();
 		}
 
 		return result;

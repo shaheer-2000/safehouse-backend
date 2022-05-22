@@ -105,6 +105,27 @@ const authPlugin = fp(async (fastify, opts, next) => {
 			}
 	
 			return role.authLevel > user.UserLogin.role.Role.authLevel;
+		},
+		isMemberOf: async function (orgUsername, targetUsername) {
+			const [userErr, user] = await fastify.to(fastify.prisma.user.findUnique({
+				where: {
+					username: targetUsername
+				},
+				select: {
+					orgUsername: true
+				}
+			}));
+
+			if (userErr) {
+				console.log(userErr);
+				return false;
+			}
+
+			if (!user) {
+				return false;
+			}
+
+			return orgUsername === user.orgUsername;
 		}
 	}, ['to', 'prisma']);
 

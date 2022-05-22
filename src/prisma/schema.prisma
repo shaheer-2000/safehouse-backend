@@ -15,7 +15,7 @@ model Login {
   password String
 
   userLogin        User?              @relation("UserLogin")
-  orgLogin         User?              @relation("OrgLogin")
+  orgLogin         User[]              @relation("OrgLogin")
   org              Organization?
   role             UserRole?
   courseLister     Course[]
@@ -55,7 +55,7 @@ model User {
   username  String @id
 
   OrgLogin    Login  @relation("OrgLogin", fields: [orgUsername], references: [username])
-  orgUsername String @map("affiliated_org") @unique
+  orgUsername String @map("affiliated_org")
 
   @@map("users")
 }
