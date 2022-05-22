@@ -8,7 +8,12 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon --verbose --watch src --watch server.js -e .js --ignore src/tests --ignore src/prisma ./server.js"
+    "prisma-migrate": "npx prisma migrate dev",
+    "prisma-reset": "npx prisma migrate reset --force",
+    "dev": "nodemon --verbose --watch src --watch .env --watch server.js -e .js --ignore src/tests --ignore src/prisma ./server.js"
+  },
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "shaheer-2000",

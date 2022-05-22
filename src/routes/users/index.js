@@ -1,16 +1,23 @@
-const users = [
-	{
-		name: 'shaheer ahmed',
-		username: 'shaheer@safehouse.io',
-		role: 'admin'
-	}
-];
-
 module.exports = async function (fastify, opts) {
-  fastify.get('/', {
-	  onRequest: [fastify.verifyJWT],
-	  preValidation: [fastify.auth.hasRole([fastify.roles.USER, fastify.roles.LISTER, fastify.roles.ADMIN])]
-  }, async function (req, res) {
-    return req.user
-  });
-}
+	fastify.get('/', {
+		onRequest: [fastify.verifyJWT],
+		preValidation: [fastify.auth.hasRole([fastify.roles.ADMIN])]
+	}, async function (req, res) {
+		const [err, users] = await fastify.to(fastify.prisma.user.findMany({
+			where: {},
+			include: {
+				OrgLogin: {
+					select: {
+						org: true,
+					}
+				}
+			}
+		}))
+
+		if (err) {
+			res.badRequest();
+		} else {
+			return users;
+		}
+	});
+};

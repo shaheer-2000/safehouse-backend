@@ -13,7 +13,6 @@ const jwtPlugin = fp(async function(fastify, opts) {
 			allowedIss: 'safehouse.io'
 		},
 		formatUser: function (user) {
-			console.log(user);
 			return {
 				username: user.username,
 				role: user.role
@@ -29,6 +28,7 @@ const jwtPlugin = fp(async function(fastify, opts) {
 			if (typeof user.role === 'undefined') {
 				throw Error();
 			}
+			console.log(req.user);
 		} catch (e) {
 			res.unauthorized();
 		}
