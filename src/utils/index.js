@@ -54,6 +54,35 @@ const getDateUnits = (dateTime) => {
 	return [dayLong, d.monthLong, d.year];
 };
 
+const monthToIntMap = {
+	'january': 1,
+	'february': 2,
+	'march': 3,
+	'april': 4,
+	'may': 5,
+	'june': 6,
+	'july': 7,
+	'august': 8,
+	'september': 9,
+	'october': 10,
+	'november': 11,
+	'december': 12
+};
+
+const intToMonth = (int) => {
+	for (const [month, _int] of Object.entries(monthToIntMap)) {
+		if (_int === int) {
+			return month;
+		}
+	}
+
+	return null;
+};
+
+const monthToInt = (month) => {
+	return monthToIntMap[month];
+};
+
 module.exports = {
 	auth: {
 		hasRole,
@@ -64,6 +93,8 @@ module.exports = {
 	dateTime: {
 		toUTCString,
 		toLocaleTimeString,
-		getDateUnits
+		getDateUnits,
+		monthToInt,
+		intToMonth
 	}
 };
