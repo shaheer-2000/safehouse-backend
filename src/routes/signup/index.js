@@ -81,7 +81,7 @@ module.exports = async (fastify, opts) => {
 				userLogin: {
 					create: {
 						...userData,
-						dateOfBirth: new Date(dateOfBirth),
+						dateOfBirth: fastify.dateTime.toUTCString(dateOfBirth),
 						orgUsername
 					}
 				},

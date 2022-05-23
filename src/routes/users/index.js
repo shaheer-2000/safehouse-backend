@@ -23,12 +23,22 @@ module.exports = async function (fastify, opts) {
 					}
 				}
 			}
-		}))
+		}));
 
 		if (err) {
-			res.badRequest();
-		} else {
-			return users;
+			return res.badRequest();
 		}
+			
+		return users.map((u) => {
+			const { OrgLogin, dateOfBirth, ...user } = u;
+
+			return {
+				...user,
+				dateOfBirth: fastify.dateTime.toLocaleTimeString(dateOfBirth),
+				org: {
+					...(OrgLogin.org)
+				}
+			}
+		});
 	});
 };
