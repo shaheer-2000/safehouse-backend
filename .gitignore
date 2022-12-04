@@ -57,4 +57,19 @@ profile*
 *clinic*
 *flamegraph*
 
+# dotenv
 .env
+
+# prisma migrations
+prisma/migrations
+
+# temp
+src/test
+src/temp
+test.js
+
+# mock data
+mock_data
+
+# artillery
+artillery_reports

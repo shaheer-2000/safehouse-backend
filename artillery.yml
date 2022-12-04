@@ -1,0 +1,38 @@
+config:
+  target: "http://localhost:8000/api"
+  phases:
+    - duration: 40
+      arrivalRate: 24
+      name: Casual Load
+  payload:
+    path: "mock_data/affil_reqs.csv"
+    fields:
+      - "username"
+      - "name"
+      - "desc"
+      - "website"
+      - "email"
+      - "logo"
+      - "phoneNum"
+      - "address"
+
+scenarios:
+  - name: "Send Affiliation Requests"
+    flow:
+      - post:
+          url: "/requests/affiliations"
+          json:
+            username: "{{ username }}"
+            name: "{{ name }}"
+            desc: "{{ desc }}"
+            website: "{{ website }}"
+            email: "{{ email }}"
+            logo: "{{ logo }}"
+            phoneNum: "{{ phoneNum }}"
+            address: "{{ address }}"
+      - post:
+          url: "/signin"
+          json:
+            username: "{{ safehouse }}"
+            password: "pass123"
+            
